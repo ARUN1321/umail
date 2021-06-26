@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:umail/compose.dart';
+import 'package:umail/login.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -22,7 +24,10 @@ class _HomeState extends State<Home> {
               MaterialPageRoute(builder: (context) => Compose()),
             );
           },
-          icon: Icon(Icons.add),
+          icon: Icon(
+            FontAwesomeIcons.pen,
+            size: 20,
+          ),
           label: Text(
             "Compose",
             style: TextStyle(
@@ -41,16 +46,19 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Settings()),
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
                       );
                     },
-                    icon: Icon(Icons.menu),
+                    icon: Icon(
+                      Icons.account_circle,
+                      size: 30,
+                    ),
                   ),
                 ),
                 Row(
                   children: [
                     Text(
-                      "You" + "\n@Mail",
+                      "YOU" + "\n@Mail",
                       style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,

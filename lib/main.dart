@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:umail/pages/history.dart';
 import 'package:umail/pages/home.dart';
 
-void main() => runApp(MaterialApp(home: MyApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  runApp(
+    MaterialApp(
+      title: "YOU@mail",
+      home: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -29,9 +42,9 @@ class _MyAppState extends State<MyApp> {
     return Scaffold(
       body: _WidgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.yellow,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.green,
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.yellowAccent,
         items: [
           BottomNavigationBarItem(
             icon: Icon(
@@ -42,7 +55,7 @@ class _MyAppState extends State<MyApp> {
             title: Text(
               "Home",
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -56,7 +69,7 @@ class _MyAppState extends State<MyApp> {
             title: Text(
               "History",
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
