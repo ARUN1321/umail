@@ -1,4 +1,4 @@
-# umail
+# YOU@mail
 
 A new Flutter project.
 
