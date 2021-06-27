@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
         floatingActionButton: FloatingActionButton.extended(
           backgroundColor: Colors.black,
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => Compose()),
             );
