@@ -53,7 +53,7 @@ class _ComposeState extends State<Compose> {
                   //send
                   final map = {
                     "message": {
-                      "from": "fbdata123@gmail.com",
+                      "from": "umail.flipr@gmail.com",
                       "subject": subjectController.text,
                       "text": bodyController.text,
                       "to": toController.text,
