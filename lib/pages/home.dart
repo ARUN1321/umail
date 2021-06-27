@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:umail/compose.dart';
 import 'package:umail/login.dart';
 
@@ -11,6 +13,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -43,11 +46,15 @@ class _HomeState extends State<Home> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(250.0, 0.0, 10.0, 0.0),
                   child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
-                      );
+                    onPressed: () async {
+                      await _googleSignIn.signOut();
+                      await clearUserPref();
+                      Navigator.pushReplacement(context, MaterialPageRoute(
+                        builder: (context) {
+                          return LoginScreen();
+                        },
+                      ));
+                      print("User Sign Out");
                     },
                     icon: Icon(
                       Icons.account_circle,
@@ -87,4 +94,9 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Drawer();
   }
+}
+
+clearUserPref() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.clear();
 }

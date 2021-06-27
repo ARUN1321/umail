@@ -1,7 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:umail/main.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -10,6 +16,15 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+
+  @override
+  void initState() {
+    emailController = new TextEditingController();
+    passwordController = new TextEditingController();
+    super.initState();
+  }
 
   Widget _buildEmailTF() {
     return Column(
@@ -25,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
+            controller: emailController,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.white,
@@ -59,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
+            controller: passwordController,
             obscureText: true,
             style: TextStyle(
               color: Colors.white,
@@ -79,46 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildForgotPasswordBtn() {
-    return Container(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
-        child: Text(
-          'Forgot Password?',
-          style: kLabelStyle,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRememberMeCheckbox() {
-    return Container(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.black),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.grey[300],
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value!;
-                });
-              },
-            ),
-          ),
-          Text(
-            'Remember me',
-            style: kLabelStyle,
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildLoginBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -126,7 +103,28 @@ class _LoginScreenState extends State<LoginScreen> {
       // ignore: deprecated_member_use
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () async {
+          if (emailController.text != '' || passwordController.text != '') {
+            FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+            try {
+              final user = await firebaseAuth.signInWithEmailAndPassword(
+                  email: emailController.text,
+                  password: passwordController.text);
+              if (user.user!.uid != null) {
+                setUserPref(user.user!.uid);
+                Navigator.pushReplacement(context, MaterialPageRoute(
+                  builder: (context) {
+                    return MyApp();
+                  },
+                ));
+              }
+            } catch (e) {
+              Fluttertoast.showToast(msg: e.toString());
+            }
+          } else {
+            Fluttertoast.showToast(msg: 'Enter some values!');
+          }
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -134,6 +132,54 @@ class _LoginScreenState extends State<LoginScreen> {
         color: Colors.grey[400],
         child: Text(
           'LOGIN',
+          style: TextStyle(
+            color: Colors.black,
+            letterSpacing: 1.5,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSignUpBtn() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      // ignore: deprecated_member_use
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () async {
+          if (emailController.text != '' || passwordController.text != '') {
+            FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+            try {
+              final user = await firebaseAuth.createUserWithEmailAndPassword(
+                  email: emailController.text,
+                  password: passwordController.text);
+              if (user.user!.uid != null) {
+                await fbCreateUser(user.user!.uid, emailController.text);
+                await setUserPref(user.user!.uid);
+                Navigator.pushReplacement(context, MaterialPageRoute(
+                  builder: (context) {
+                    return MyApp();
+                  },
+                ));
+              }
+            } catch (e) {
+              Fluttertoast.showToast(msg: e.toString());
+            }
+          } else {
+            Fluttertoast.showToast(msg: 'Enter some values!');
+          }
+        },
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.grey[400],
+        child: Text(
+          'SIGNUP',
           style: TextStyle(
             color: Colors.black,
             letterSpacing: 1.5,
@@ -173,34 +219,17 @@ class _LoginScreenState extends State<LoginScreen> {
             color: Colors.blueGrey,
             size: 40.0,
           ),
-          onPressed: () {},
+          onPressed: () async {
+            final boolRes = await _handleSignIn();
+            if (boolRes) {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return MyApp();
+                },
+              ));
+            }
+          },
         ));
-  }
-
-  Widget _buildSignupBtn() {
-    return GestureDetector(
-      onTap: () => print('Sign Up Button Pressed'),
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: 'Don\'t have an Account? ',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            TextSpan(
-              text: 'Sign Up',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -238,12 +267,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 30.0,
                       ),
                       _buildPasswordTF(),
-                      _buildForgotPasswordBtn(),
-                      _buildRememberMeCheckbox(),
+                      // _buildForgotPasswordBtn(),
+                      // _buildRememberMeCheckbox(),
                       _buildLoginBtn(),
-                      _buildSignInWithText(),
-                      _buildSocialBtnRow(),
-                      _buildSignupBtn(),
+                      _buildSignUpBtn(),
+                      //  _buildSignInWithText(),
+                      //   _buildSocialBtnRow(),
                     ],
                   ),
                 ),
@@ -276,3 +305,32 @@ final kBoxDecorationStyle = BoxDecoration(
     ),
   ],
 );
+
+Future<bool> _handleSignIn() async {
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+    ],
+  );
+  try {
+    final user = await _googleSignIn.signIn();
+    if (user == null) {
+      return false;
+    } else {
+      await setUserPref(user.id);
+    }
+  } catch (error) {
+    print(error);
+  }
+  return true;
+}
+
+setUserPref(id) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('user', '$id');
+}
+
+fbCreateUser(uid, email) async {
+  final fstore = FirebaseFirestore.instance.collection('Users');
+  await fstore.doc(uid).set({"user": email});
+}

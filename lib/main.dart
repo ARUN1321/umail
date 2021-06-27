@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:umail/pages/history.dart';
 import 'package:umail/pages/home.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+import 'login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -12,9 +17,29 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       title: "YOU@mail",
-      home: MyApp(),
+      home: Decider(),
     ),
   );
+}
+
+class Decider extends StatelessWidget {
+  const Decider({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.data == null) {
+            return LoginScreen();
+          }
+          return MyApp();
+        }
+        return Center(child: CircularProgressIndicator());
+      },
+      future: getUserPref(),
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -80,4 +105,9 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+}
+
+getUserPref() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('user');
 }

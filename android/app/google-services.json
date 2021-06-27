@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "494847512876",
+    "project_id": "umailtest-7ca4f",
+    "storage_bucket": "umailtest-7ca4f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494847512876:android:d0db77102943615c941c89",
+        "android_client_info": {
+          "package_name": "com.example.umail"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "494847512876-u3lf0pr3utk3f355u96uouneeg4dcic4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.umail",
+            "certificate_hash": "be3f2b0303155b2feb95be142c158fa52fecfe2f"
+          }
+        },
+        {
+          "client_id": "494847512876-0h4bts4g1m8dlj0gvhie2qbgbbe11g96.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASG-hRcr79wzwx5rcM_1vdThISl0okqFo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "494847512876-0h4bts4g1m8dlj0gvhie2qbgbbe11g96.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
