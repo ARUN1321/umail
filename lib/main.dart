@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:umail/pages/history.dart';
 import 'package:umail/pages/home.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
 
 import 'login.dart';
 
@@ -15,7 +16,7 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
   runApp(
-    MaterialApp(
+    GetMaterialApp(
       title: "YOU@mail",
       home: Decider(),
     ),

@@ -34,6 +34,7 @@ dependencies:
   google_sign_in:
   shared_preferences:
   fluttertoast:
+  get:
 dev_dependencies:
   flutter_test:
     sdk: flutter
