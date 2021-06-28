@@ -92,26 +92,31 @@ class _HomeState extends State<Home> {
                           );
                         } else {
                           print(snapshot.data);
-                          return ListView.builder(
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(
-                                    '${snapshot.data[index]['message']['subject']}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    '${snapshot.data[index]['message']['text']}',
-                                    maxLines: 1,
-                                  ),
-                                  trailing: Chip(
-                                      label: Text(snapshot.data[index]['status']
-                                          ? 'On'
-                                          : 'Off')),
-                                );
-                              });
+                          snapshot.data.length == 0
+                              ? Center(
+                                  child: Text('No recurring emails!'),
+                                )
+                              : ListView.builder(
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      title: Text(
+                                        '${snapshot.data[index]['message']['subject']}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        '${snapshot.data[index]['message']['text']}',
+                                        maxLines: 1,
+                                      ),
+                                      trailing: Chip(
+                                          label: Text(snapshot.data[index]
+                                                  ['status']
+                                              ? 'On'
+                                              : 'Off')),
+                                    );
+                                  });
                         }
                       }
                       return Center(
