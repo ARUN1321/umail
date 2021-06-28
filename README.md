@@ -1,5 +1,5 @@
 # Umail
-A **Flutter** mobile application where users can login and send recurring emails to their receipents with **Firebase** as database and **NodeJs** as the backend. This project is done for ***[Flipr Hackathon 9.0](https://flipr.ai/)***.<br>
+A **Flutter** mobile application where users can login and send recurring emails to their receipents with **Firebase** as database and **NodeJs** as the backend [(repo here)](https://github.com/abi-raj/umail-node-js). This project is done for ***[Flipr Hackathon 9.0](https://flipr.ai/)***.<br>
 You can find the find the installable apk in the 'apk final' folder in this repository.
 ## Screenshots
 <div float="middle">
